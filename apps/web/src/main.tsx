@@ -5,9 +5,10 @@ import { Toaster } from 'sonner';
 import { AppProviders } from './providers/app-providers';
 import App from './App';
 import './index.css';
+import { applyTheme, getSavedTheme } from './lib/use-theme';
 
-// Force dark mode for Tailwind
-document.documentElement.classList.add('dark');
+// Apply saved theme before first paint — prevents flash of wrong theme
+applyTheme(getSavedTheme());
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -15,7 +16,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AppProviders>
         <App />
         <Toaster
-          theme="dark"
           toastOptions={{
             style: {
               background: 'var(--bg-card)',

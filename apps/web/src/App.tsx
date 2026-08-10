@@ -8,6 +8,7 @@ import {
 
 import { supabase } from './lib/supabase';
 import { BRAND, browserTitle, footerText } from './lib/brand';
+import { useTheme } from './lib/use-theme';
 import { useAuth, useTenant } from './providers/app-providers';
 import { isTertiary } from './features/academics/academics-api';
 import type { AppRole } from './lib/database.types';
@@ -151,6 +152,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string|null>(null);
+  const { dark, setDark } = useTheme();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setMsg(null);
@@ -169,90 +171,96 @@ function Login() {
   };
 
   return (
-    <div style={{ display:'flex', minHeight:'100vh', background:'var(--bg-primary)', fontFamily:'Inter, sans-serif' }}>
-      {/* ── Left hero panel: Abstract knowledge graph / floating particles ── */}
-      <div style={{
-        flex: 1, display:'none', position:'relative', overflow:'hidden',
+    <div style={{ display:'flex', minHeight:'100vh', background:'var(--bg-primary)', fontFamily:'Inter, sans-serif', position:'relative' }}>
+
+      {/* ── Left hero panel — visible lg and above ── */}
+      <div className="hidden lg:flex" style={{
+        flex: 1, position:'relative', overflow:'hidden', flexDirection:'column',
+        alignItems:'center', justifyContent:'center',
         background:'radial-gradient(ellipse at 40% 50%, rgba(99,102,241,0.25) 0%, rgba(67,56,202,0.15) 40%, var(--bg-primary) 70%)',
-      }} className="lg:flex flex-col items-center justify-center">
-        {/* Floating particle network */}
+      }}>
+        {/* Network SVG */}
         <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', opacity:0.2 }} viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice">
-          {/* Network lines */}
-          {[[100,150,300,250],[300,250,480,180],[300,250,200,400],[480,180,520,350],[200,400,380,500],[520,350,400,520],[380,500,180,560],[180,560,80,450],[80,450,100,150],[400,520,500,600],[200,400,80,450]].map(([x1,y1,x2,y2],i)=>(
+          {([[100,150,300,250],[300,250,480,180],[300,250,200,400],[480,180,520,350],[200,400,380,500],[520,350,400,520],[380,500,180,560],[180,560,80,450],[80,450,100,150],[400,520,500,600],[200,400,80,450]] as number[][]).map(([x1,y1,x2,y2],i)=>(
             <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#6366F1" strokeWidth="1"/>
           ))}
-          {/* Network nodes */}
-          {[[100,150],[300,250],[480,180],[200,400],[520,350],[380,500],[180,560],[80,450],[400,520]].map(([cx,cy],i)=>(
+          {([[100,150],[300,250],[480,180],[200,400],[520,350],[380,500],[180,560],[80,450],[400,520]] as number[][]).map(([cx,cy],i)=>(
             <circle key={i} cx={cx} cy={cy} r={i===1?8:5} fill="#818CF8" opacity={i===1?1:0.7}/>
           ))}
         </svg>
 
-        {/* Open book graphic */}
-        <div style={{ position:'relative', zIndex:1, textAlign:'center' }}>
+        <div style={{ position:'relative', zIndex:1, textAlign:'center', padding:'0 48px' }}>
           <div style={{
-            width:140, height:140, margin:'0 auto 32px',
+            width:120, height:120, margin:'0 auto 28px',
             background:'radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)',
             borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center',
-            boxShadow:'0 0 60px rgba(99,102,241,0.3)',
-          }}>
-            <div style={{ fontSize:'5rem' }}>📚</div>
-          </div>
-          <h2 style={{ fontFamily:'Poppins, sans-serif', fontWeight:800, fontSize:'1.75rem', color:'white', marginBottom:12 }}>
+            boxShadow:'0 0 60px rgba(99,102,241,0.3)', fontSize:'4rem',
+          }}>📚</div>
+          <h2 style={{ fontFamily:'Poppins, sans-serif', fontWeight:800, fontSize:'1.6rem', color:'white', marginBottom:12 }}>
             Empowering Education
           </h2>
-          <p style={{ color:'var(--text-secondary)', fontSize:'0.95rem', maxWidth:340, lineHeight:1.6 }}>
-            A complete school management platform for every institution type — primary, secondary, college, polytechnic, or university.
+          <p style={{ color:'var(--text-secondary)', fontSize:'0.9rem', maxWidth:340, lineHeight:1.7 }}>
+            A complete school management platform for every institution — primary, secondary, college, polytechnic, or university.
           </p>
-
-          {/* Feature bullets */}
-          <div style={{ marginTop:32, flexDirection:'column', gap:12, alignItems:'flex-start', display:'inline-flex' }}>
+          <div style={{ marginTop:28, display:'inline-flex', flexDirection:'column', gap:10, alignItems:'flex-start' }}>
             {['AI-Powered Intelligence Engine','Results & Transcript Management','Finance, Fees & Scholarships','E-Learning & CBT Exams'].map((f)=>(
-              <div key={f} style={{ display:'flex', alignItems:'center', gap:10, color:'var(--text-secondary)', fontSize:'0.85rem' }}>
+              <div key={f} style={{ display:'flex', alignItems:'center', gap:10, color:'var(--text-secondary)', fontSize:'0.82rem' }}>
                 <div style={{ width:6, height:6, borderRadius:'50%', background:'var(--accent-primary)', flexShrink:0 }} />
                 {f}
               </div>
             ))}
           </div>
         </div>
-
-        {/* Footer */}
-        <div style={{ position:'absolute', bottom:24, color:'var(--text-muted)', fontSize:'0.72rem', letterSpacing:'0.04em' }}>
+        <div style={{ position:'absolute', bottom:24, color:'var(--text-muted)', fontSize:'0.7rem', letterSpacing:'0.04em' }}>
           Powered by {BRAND.suite}
         </div>
       </div>
 
-      {/* ── Right login card ── */}
-      <div style={{ width:'100%', maxWidth:480, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'40px 32px' }}>
-        <form onSubmit={submit} style={{ width:'100%', maxWidth:380 }}>
+      {/* ── Right login panel ── */}
+      <div style={{ width:'100%', maxWidth:480, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'40px 28px', background:'var(--bg-primary)' }}>
 
+        {/* Dark / Light toggle */}
+        <div style={{ position:'fixed', top:16, right:20, zIndex:10 }}>
+          <button type="button" onClick={()=>setDark(d=>!d)}
+            style={{
+              display:'flex', alignItems:'center', gap:7, padding:'6px 14px', borderRadius:20,
+              border:'1px solid var(--bg-border)', background:'var(--bg-card)',
+              color:'var(--text-secondary)', fontSize:'0.76rem', fontWeight:600, cursor:'pointer',
+            }}>
+            <span>{dark ? '☀️' : '🌙'}</span>
+            {dark ? 'Light mode' : 'Dark mode'}
+          </button>
+        </div>
+
+        <form onSubmit={submit} style={{ width:'100%', maxWidth:380 }}>
           {/* Logo + wordmark */}
-          <div style={{ textAlign:'center', marginBottom:36 }}>
+          <div style={{ textAlign:'center', marginBottom:32 }}>
             <div style={{
               width:64, height:64, borderRadius:'50%', margin:'0 auto 16px',
               background:'linear-gradient(135deg, var(--gold-primary), var(--gold-light))',
               display:'flex', alignItems:'center', justifyContent:'center',
-              boxShadow:'0 0 30px rgba(201,168,76,0.4)', fontSize:'1.75rem',
+              boxShadow:'0 0 30px rgba(201,168,76,0.35)', fontSize:'1.6rem',
               fontFamily:'Poppins, sans-serif', fontWeight:900, color:'#080810',
             }}>∞</div>
             <h1 style={{
-              fontFamily:'Poppins, Inter, sans-serif', fontWeight:900, fontSize:'2rem',
+              fontFamily:'Poppins, sans-serif', fontWeight:900, fontSize:'1.9rem',
               background:'linear-gradient(135deg, var(--gold-primary), var(--gold-light))',
               WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
               marginBottom:4,
             }}>{BRAND.name}</h1>
-            <p style={{ color:'var(--text-secondary)', fontSize:'0.8rem', fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:6 }}>
+            <p style={{ color:'var(--text-secondary)', fontSize:'0.75rem', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>
               {BRAND.productShort}
             </p>
-            <p style={{ color:'var(--text-muted)', fontSize:'0.85rem' }}>
+            <p style={{ color:'var(--text-muted)', fontSize:'0.82rem' }}>
               {mode === 'in' ? 'Sign in to your account' : 'Create your account'}
             </p>
           </div>
 
           {/* Card */}
           <div style={{
-            background:'rgba(19,19,37,0.90)', backdropFilter:'blur(24px)',
+            background:'var(--bg-card)', backdropFilter:'blur(24px)',
             border:'1px solid var(--accent-border)', borderRadius:20,
-            boxShadow:'0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 var(--accent-border)',
+            boxShadow: dark ? '0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 var(--accent-border)' : '0 4px 20px rgba(0,0,0,0.08)',
             padding:'28px 28px 24px',
           }}>
             <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
@@ -264,13 +272,14 @@ function Login() {
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} required minLength={6} placeholder="••••••••" style={{ marginTop:6 }} />
               </div>
-              {msg && <p style={{ fontSize:'0.78rem', color:'var(--color-warning)', background:'rgba(245,158,11,0.1)', padding:'8px 12px', borderRadius:8, border:'1px solid rgba(245,158,11,0.2)' }}>{msg}</p>}
+              {msg && (
+                <p style={{ fontSize:'0.78rem', color:'var(--color-warning)', background:'rgba(245,158,11,0.1)', padding:'8px 12px', borderRadius:8, border:'1px solid rgba(245,158,11,0.2)' }}>{msg}</p>
+              )}
               <button type="submit" disabled={busy} style={{
                 width:'100%', padding:'11px', borderRadius:10, border:'none', cursor:busy?'not-allowed':'pointer',
                 background:'linear-gradient(135deg, var(--accent-primary), var(--accent-deep))',
                 color:'white', fontWeight:700, fontSize:'0.9rem', display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-                boxShadow:'0 4px 20px var(--accent-glow)', transition:'all 0.2s',
-                opacity: busy ? 0.7 : 1,
+                boxShadow:'0 4px 20px var(--accent-glow)', opacity: busy ? 0.7 : 1,
               }}>
                 {busy && <Loader2 size={16} className="animate-spin" />}
                 {mode === 'in' ? 'Sign In' : 'Create Account'}
@@ -283,7 +292,7 @@ function Login() {
             {mode === 'in' ? "Don't have an account? Create one" : 'Already have an account? Sign in'}
           </button>
 
-          <p style={{ marginTop:24, textAlign:'center', color:'var(--text-muted)', fontSize:'0.69rem', lineHeight:1.6 }}>
+          <p style={{ marginTop:20, textAlign:'center', color:'var(--text-muted)', fontSize:'0.68rem', lineHeight:1.6 }}>
             Powered by {BRAND.suite}<br />{footerText()}
           </p>
         </form>
@@ -291,6 +300,7 @@ function Login() {
     </div>
   );
 }
+
 
 /* ────────────────────────── SIDEBAR ─────────────────────── */
 function Sidebar({ sections, collapsed, onNavigate }: { sections: NavSection[]; collapsed: boolean; onNavigate: () => void }) {
@@ -368,6 +378,7 @@ function Shell() {
   const { institution, isSuperAdmin, hasRole } = useTenant();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const { dark, setDark } = useTheme();
   const demoStatus = useDemoStatus();
   const demoMode = !!demoStatus.data?.demo_mode;
 
@@ -423,6 +434,12 @@ function Shell() {
 
         {/* Right actions */}
         <div style={{ marginLeft:'auto', display:'flex', alignItems:'center', gap:8 }}>
+          {/* Theme toggle */}
+          <button type="button" onClick={() => setDark((d) => !d)}
+            style={{ background:'none', border:'1px solid var(--bg-border)', borderRadius:8, padding:'5px 9px', cursor:'pointer', color:'var(--text-secondary)', fontSize:'0.85rem', display:'flex', alignItems:'center' }}
+            title={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
+            {dark ? '☀️' : '🌙'}
+          </button>
           <NotificationBell />
           <span style={{ fontSize:'0.75rem', color:'var(--text-muted)', display:'none' }} className="sm:inline">{user?.email}</span>
           <button onClick={() => signOut()} title="Sign out"
