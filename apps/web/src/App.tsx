@@ -205,7 +205,7 @@ function Login() {
           </p>
 
           {/* Feature bullets */}
-          <div style={{ marginTop:32, display:'flex', flexDirection:'column', gap:12, alignItems:'flex-start', display:'inline-flex' }}>
+          <div style={{ marginTop:32, flexDirection:'column', gap:12, alignItems:'flex-start', display:'inline-flex' }}>
             {['AI-Powered Intelligence Engine','Results & Transcript Management','Finance, Fees & Scholarships','E-Learning & CBT Exams'].map((f)=>(
               <div key={f} style={{ display:'flex', alignItems:'center', gap:10, color:'var(--text-secondary)', fontSize:'0.85rem' }}>
                 <div style={{ width:6, height:6, borderRadius:'50%', background:'var(--accent-primary)', flexShrink:0 }} />

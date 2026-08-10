@@ -28,8 +28,9 @@ const selectClass =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50';
 const titleCase = (s: string) => s.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return <div className="space-y-1.5"><Label>{label}</Label>{children}{error && <p className="text-xs text-destructive">{error}</p>}</div>;
+function Field({ label, error, children }: { label: string; error?: unknown; children: React.ReactNode }) {
+  const msg = typeof error === 'string' ? error : (error as { message?: string } | undefined)?.message;
+  return <div className="space-y-1.5"><Label>{label}</Label>{children}{msg && <p className="text-xs text-destructive">{msg}</p>}</div>;
 }
 
 function useStaffOptions(institutionId: string) {

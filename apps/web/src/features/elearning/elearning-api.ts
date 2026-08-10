@@ -222,8 +222,9 @@ export function useEnrolledSubjects(institutionId: string) {
       if (!enr) return [];
 
       let q = supabase.from('teaching_assignments').select('subject:subjects(id, title, code)');
-      if (enr.class_arm_id) q = q.eq('class_arm_id', enr.class_arm_id);
-      else if (enr.programme_id) q = q.eq('programme_id', enr.programme_id);
+      const e = enr as { class_arm_id: string | null; programme_id: string | null };
+      if (e.class_arm_id) q = q.eq('class_arm_id', e.class_arm_id);
+      else if (e.programme_id) q = q.eq('programme_id', e.programme_id);
       else return [];
       const { data, error } = await q;
       if (error) throw error;

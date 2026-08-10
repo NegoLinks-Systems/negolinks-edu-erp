@@ -322,7 +322,7 @@ function GradingSection({ inst, canEdit }: { inst: Institution; canEdit: boolean
     setBands((b) => b.map((row, idx) => (idx === i ? { ...row, ...patch } : row)));
 
   const save = () =>
-    update.mutate({ grading_system: { scale: bands } }, {
+    update.mutate({ grading_system: { scale: bands } as unknown as import('../../lib/database.types').Json }, {
       onSuccess: () => toast.success('Grading scale saved'),
       onError: (e: Error) => toast.error(e.message),
     });

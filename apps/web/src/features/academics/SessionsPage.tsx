@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useTenant } from '../../providers/app-providers';
-import type { AcademicSession } from '../../lib/database.types';
+import type { AcademicSession, AcademicTerm } from '../../lib/database.types';
 import {
   sessionSchema, termSchema, Sessions, useSetCurrentSession,
   useTerms, useUpsertTerm, useSetCurrentTerm, useDeleteTerm,
@@ -42,7 +42,7 @@ function TermsPanel({ institutionId, session, canManage }: {
   const { register, handleSubmit, reset, formState: { errors } } =
     useForm<TermForm>({ resolver: zodResolver(termSchema), defaultValues: { name: '', sort_order: 1, starts_on: '', ends_on: '' } });
 
-  const start = (t?: typeof terms extends (infer U)[] ? U : never) => {
+  const start = (t?: AcademicTerm) => {
     setEditing(t ? { id: t.id, name: t.name, sort_order: t.sort_order, starts_on: t.starts_on ?? '', ends_on: t.ends_on ?? '' } : { name: '', sort_order: (terms?.length ?? 0) + 1, starts_on: '', ends_on: '' });
     reset(t ? { name: t.name, sort_order: t.sort_order, starts_on: t.starts_on ?? '', ends_on: t.ends_on ?? '' } : { name: '', sort_order: (terms?.length ?? 0) + 1, starts_on: '', ends_on: '' });
   };

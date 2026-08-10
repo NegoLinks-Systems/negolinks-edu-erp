@@ -18,12 +18,15 @@ function clean<T extends Record<string, unknown>>(v: T): Record<string, unknown>
 
 /** Generic insert/update/delete + list factory to keep each entity terse. */
 function crud<Row extends { id: string }, Form>(table: string) {
+  // The table name is dynamic (string), so we access the query builder in an
+  // untyped way and re-apply the concrete Row type at the boundaries below.
+  const from = () => (supabase as any).from(table);
   return {
     useList(institutionId: string, extra?: { column: string; order?: boolean }) {
       return useQuery({
         queryKey: [table, institutionId],
         queryFn: async () => {
-          let q = supabase.from(table).select('*').eq('institution_id', institutionId);
+          let q = from().select('*').eq('institution_id', institutionId);
           q = extra ? q.order(extra.column, { ascending: extra.order ?? true }) : q.order('created_at');
           const { data, error } = await q;
           if (error) throw error;
@@ -38,8 +41,8 @@ function crud<Row extends { id: string }, Form>(table: string) {
           const { id, ...rest } = input as Form & { id?: string };
           const row = { ...clean(rest as Record<string, unknown>), institution_id: institutionId };
           const res = id
-            ? await supabase.from(table).update(row).eq('id', id)
-            : await supabase.from(table).insert(row);
+            ? await from().update(row).eq('id', id)
+            : await from().insert(row);
           if (res.error) throw res.error;
         },
         onSuccess: () => qc.invalidateQueries({ queryKey: [table, institutionId] }),
@@ -49,7 +52,7 @@ function crud<Row extends { id: string }, Form>(table: string) {
       const qc = useQueryClient();
       return useMutation({
         mutationFn: async (id: string) => {
-          const { error } = await supabase.from(table).delete().eq('id', id);
+          const { error } = await from().delete().eq('id', id);
           if (error) throw error;
         },
         onSuccess: () => qc.invalidateQueries({ queryKey: [table, institutionId] }),
