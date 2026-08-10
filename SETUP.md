@@ -68,7 +68,7 @@ You can reprint these any time with `supabase status`.
 supabase db reset
 ```
 
-This (re)creates the local database and runs all 25 migrations in
+This (re)creates the local database and runs all 27 migrations in
 `supabase/migrations/` in order — every table, enum, function, trigger, RLS policy,
 and the storage buckets. Re-run it whenever you want a clean slate.
 
@@ -147,7 +147,7 @@ supabase link --project-ref YOUR-REF # paste the DB password when asked
 supabase db push
 ```
 
-This applies the same 25 migrations to your hosted database. Confirm in the
+This applies the same 27 migrations to your hosted database. Confirm in the
 dashboard's **Table Editor** that the tables exist and **Storage** shows the
 `branding`, `documents`, and `submissions` buckets.
 
@@ -169,7 +169,7 @@ supabase secrets set \
   RESEND_API_KEY=...           EMAIL_FROM="NegoLinks <no-reply@negolinks.com>" \
   TWILIO_ACCOUNT_SID=...       TWILIO_AUTH_TOKEN=... \
   TWILIO_SMS_FROM=+1...        TWILIO_WHATSAPP_FROM=whatsapp:+1... \
-  INTELLIGENCE_API_KEY=...     INTELLIGENCE_API_URL=https://api.openai.com/v1 \
+  INTELLIGENCE_API_KEY=...     INTELLIGENCE_API_URL=https://api.groq.com/openai/v1/chat/completions   # Groq (default); or any OpenAI-compatible URL \
   INTELLIGENCE_MODEL=gpt-4o-mini
 ```
 
@@ -353,6 +353,30 @@ a primary/secondary school sees "Class applying for").
 
 > Tip: pick your slug to match the subdomain you intend to publish. If you deploy at
 > `school.negolinks.com`, set the institution slug to `school` in the bootstrap SQL.
+
+## Enterprise features (admin-only)
+
+Under **Administration** in the sidebar (visible to admins/super admins):
+
+- **Admin Dashboard** — live KPI cards, fee-collection donut, enrolment bar chart, and
+  AI Smart Insights generated from your real data.
+- **Demo Data Management** *(super admin)* — Load / Reload / Delete realistic sample data
+  across students and staff, with five scenario sizes (small → heavy). Demo records are tagged
+  and removed surgically; real data is never touched. A **DEMO MODE** banner shows while demo
+  data is loaded.
+- **Audit Trail** — a read-only, tamper-evident log of every significant action (who, what,
+  when), searchable and filterable by action type. Audit entries can never be edited or deleted.
+
+### AI provider (NegoLinks Intelligence Engine)
+
+The suite default is **Groq Cloud** (OpenAI-compatible, fast). Set these Edge Function secrets
+(swap the URL/key/model for any other OpenAI-compatible provider — no code change needed):
+
+```bash
+supabase secrets set INTELLIGENCE_API_KEY=gsk_your_groq_key
+supabase secrets set INTELLIGENCE_API_URL=https://api.groq.com/openai/v1/chat/completions
+supabase secrets set INTELLIGENCE_MODEL=llama-3.3-70b-versatile
+```
 
 ## Troubleshooting
 

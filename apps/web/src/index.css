@@ -1,38 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    /* ── NegoLinks fixed dark background palette ── */
+    --bg-primary:   #080810;
+    --bg-surface:   #0E0E1C;
+    --bg-card:      #131325;
+    --bg-border:    #1C1C34;
+    --text-primary: #FFFFFF;
+    --text-secondary:#A0A0B8;
+    --text-muted:   #5A5A78;
+
+    /* ── School ERP accent: Academic Blue ── */
+    --accent-primary: #6366F1;
+    --accent-light:   #818CF8;
+    --accent-deep:    #4338CA;
+    --accent-glow:    rgba(99, 102, 241, 0.15);
+    --accent-border:  rgba(99, 102, 241, 0.30);
+
+    /* ── NegoLinks gold (logo only, never as product accent) ── */
+    --gold-primary: #C9A84C;
+    --gold-light:   #E8C97A;
+    --gold-deep:    #A8860A;
+
+    /* ── Semantic status colors ── */
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-danger:  #EF4444;
+    --color-info:    #3B82F6;
+
+    /* ── Shadcn/ui tokens mapped to dark theme ── */
+    --background:           210 40% 3%;
+    --foreground:           0 0% 100%;
+    --card:                 240 30% 10%;
+    --card-foreground:      0 0% 100%;
+    --popover:              240 30% 10%;
+    --popover-foreground:   0 0% 100%;
+    --primary:              239 84% 67%;
+    --primary-foreground:   0 0% 100%;
+    --secondary:            240 20% 14%;
+    --secondary-foreground: 0 0% 70%;
+    --muted:                240 20% 14%;
+    --muted-foreground:     240 10% 55%;
+    --accent:               240 20% 14%;
+    --accent-foreground:    0 0% 100%;
+    --destructive:          0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border:               240 20% 18%;
+    --input:                240 20% 18%;
+    --ring:                 239 84% 67%;
+    --radius:               0.5rem;
   }
 
-  * {
-    border-color: hsl(var(--border));
-  }
+  * { border-color: hsl(var(--border)); box-sizing: border-box; }
+
+  html { color-scheme: dark; }
+
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+}
+
+@layer utilities {
+  .gold-gradient-text {
+    background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .accent-gradient-text {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .accent-gradient-bg {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-deep));
+  }
+  .glass-card {
+    background: rgba(19, 19, 37, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--accent-border);
   }
 }

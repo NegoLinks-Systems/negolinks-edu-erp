@@ -211,7 +211,7 @@ Gating groups used across the system:
 
 ## 10. First-run checklist
 
-1. Apply migrations 0001–0025.
+1. Apply migrations 0001–0027.
 2. Create the first **institution** row (set `type`, name, currency, branding).
 3. Create the first **super admin**: sign up a user, then set `profiles.is_super_admin = true`
    (super admins bypass tenant scoping).

@@ -5,10 +5,14 @@
 // runs entirely server-side; its identity and credentials never reach the
 // client. Responses and errors are provider-neutral by design.
 //
-// Configure (provider-agnostic, OpenAI-compatible Chat Completions shape):
-//   supabase secrets set INTELLIGENCE_API_KEY=...
-//   supabase secrets set INTELLIGENCE_API_URL=https://api.openai.com/v1/chat/completions
-//   supabase secrets set INTELLIGENCE_MODEL=gpt-4o-mini
+// Default provider: Groq Cloud (OpenAI-compatible). Any OpenAI-compatible
+// endpoint works — switch provider by changing the three secrets below, no
+// code change needed (OpenAI, xAI/Grok, DeepSeek, OpenRouter, Ollama, Azure…).
+//
+// Configure (Groq is the suite default):
+//   supabase secrets set INTELLIGENCE_API_KEY=gsk_...                         # Groq key
+//   supabase secrets set INTELLIGENCE_API_URL=https://api.groq.com/openai/v1/chat/completions
+//   supabase secrets set INTELLIGENCE_MODEL=llama-3.3-70b-versatile
 //
 // Deploy:  supabase functions deploy intelligence-engine
 
@@ -64,8 +68,8 @@ Deno.serve(async (req) => {
   if (!body.instructions || !body.instructions.trim()) return json({ error: 'Please describe what the document should say.' }, 400);
 
   const apiKey = Deno.env.get('INTELLIGENCE_API_KEY');
-  const apiUrl = Deno.env.get('INTELLIGENCE_API_URL') ?? 'https://api.openai.com/v1/chat/completions';
-  const model = Deno.env.get('INTELLIGENCE_MODEL') ?? 'gpt-4o-mini';
+  const apiUrl = Deno.env.get('INTELLIGENCE_API_URL') ?? 'https://api.groq.com/openai/v1/chat/completions';
+  const model = Deno.env.get('INTELLIGENCE_MODEL') ?? 'llama-3.3-70b-versatile';
   if (!apiKey) return json({ error: 'The Intelligence Engine is not configured yet.' }, 503);
 
   const system =

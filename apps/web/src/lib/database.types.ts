@@ -573,6 +573,13 @@ export interface Database {
       submit_assignment: { Args: { _assignment: string; _content: string | null; _file_url: string | null; _file_path: string | null }; Returns: undefined };
       my_student_id: { Args: Record<string, never>; Returns: string | null };
       get_public_institution: { Args: { _slug: string }; Returns: { id: string; slug: string; name: string; type: InstitutionType; logo_url: string | null; primary_color: string | null; secondary_color: string | null; motto: string | null }[] };
+      demo_load: { Args: { _scenario?: string }; Returns: Json };
+      demo_delete: { Args: Record<string, never>; Returns: Json };
+      demo_reload: { Args: { _scenario?: string }; Returns: Json };
+      demo_status: { Args: Record<string, never>; Returns: Json };
+      can_view_audit: { Args: Record<string, never>; Returns: boolean };
+      audit_actions: { Args: Record<string, never>; Returns: { action: string }[] };
+      audit_list: { Args: { _search?: string; _action?: string; _limit?: number; _offset?: number }; Returns: { id: number; actor_id: string | null; actor_name: string; actor_email: string; action: string; entity: string | null; entity_id: string | null; metadata: Json; created_at: string }[] };
       grade_submission: { Args: { _submission: string; _grade: number; _feedback: string | null }; Returns: undefined };
       compute_student_discount: { Args: { _student: string; _session: string; _gross: number }; Returns: number };
       apply_scholarships_for_student: { Args: { _student: string; _session: string }; Returns: number };
